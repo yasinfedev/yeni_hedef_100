@@ -111,12 +111,37 @@
   <body>
     <div class="jumbotron alert alert-primary text-center" style="font-weight:bold; font-size:24px; color:black">HEDEF 100 OYUNU</div>
     <div class="container">
-      <div class="alert alert-info" role="alert">
-        Hedef 100, 2000 öncesi yıllardan kalma, kağıt üzerinde çizilerek oynanan bir zeka ve strateji oyununun kodlamaya dökülmüş halidir.<br>
-        Bu oyunda amaç, oyun sahasındaki 100 kareden istediğiniz birine tıklayarak 1 rakamını yerleştirmek. Bundan sonraki her bir kareye tıklamanızda, yerleştirilen sayılar birer birer sırayla artacak. Hedefimiz 100'e ulaşabilmek!<hr>
-        Oyun kuralları için <a href="#kurallar">tıklayın.</a>
+      
+      <!-- Akordeon Menü Başlangıcı -->
+      <div class="accordion" id="accordionExample">
+        <div class="card">
+          <div class="card-header" id="headingOne">
+            <h2 class="mb-0">
+              <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                Oyun Hakkında Bilgi ve Kurallar
+              </button>
+            </h2>
+          </div>
+
+          <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+            <div class="card-body">
+              Hedef 100, 2000 öncesi yıllardan kalma, kağıt üzerinde çizilerek oynanan bir zeka ve strateji oyununun kodlamaya dökülmüş halidir.<br>
+              Bu oyunda amaç, oyun sahasındaki 100 kareden istediğiniz birine tıklayarak 1 rakamını yerleştirmek. Bundan sonraki her bir kareye tıklamanızda, yerleştirilen sayılar birer birer sırayla artacak. Hedefimiz 100'e ulaşabilmek!<hr>
+              <ul>
+                <b> KURALLAR:</b>
+                <li>Oyunda istediğiniz bir kareden başlayabilirsiniz.</li>
+                <li>Bir sonraki sayıyı, yatay ve dikey düzlemde komşu 3.kareye, çapraz düzlemde ise komşu 2.kareye yerleştirebilirsiniz (Çok şanslısınız, oyun motorumuz size gidilebilir kareleri gösteriyor).</li>
+                <li>Hamle geri alabilirsiniz, ancak sadece 3 kere! Hakkınız bittiğinde artık hamle geri alma şansınız kalmaz.</li>
+                <li>Baştan başlamak isterseniz bunu alttaki kırmızı buton ile yapabilirsiniz.</li>
+                <li>Oyun basit gibi görünse de, 100'e ulaşmak epey bir güç. İmkansız değil, 100'e ulaşmanın çok fazla yolu var ancak belirttiğimiz gibi biraz zor :)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="card">
+      <!-- Akordeon Menü Sonu -->
+
+      <div class="card mt-3">
         <div class="card-body">
           <div class="container">
             <div class="row">
@@ -125,16 +150,6 @@
                 <hr>
               </div>
             </div>
-          </div>
-          <div class="alert alert-info" role="alert" id="kurallar">
-            <ul>
-              <b>KURALLAR:</b>
-              <li>Oyunda istediğiniz bir kareden başlayabilirsiniz.</li>
-              <li>Bir sonraki sayıyı, yatay ve dikey düzlemde komşu 3.kareye, çapraz düzlemde ise komşu 2.kareye yerleştirebilirsiniz (Çok şanslısınız, oyun motorumuz size gidilebilir kareleri gösteriyor).</li>
-              <li>Hamle geri alabilirsiniz, ancak sadece 3 kere! Hakkınız bittiğinde artık hamle geri alma şansınız kalmaz.</li>
-              <li>Baştan başlamak isterseniz bunu alttaki kırmızı buton ile yapabilirsiniz.</li>
-              <li>Oyun basit gibi görünse de, 100'e ulaşmak epey bir güç. İmkansız değil, 100'e ulaşmanın çok fazla yolu var ancak belirttiğimiz gibi biraz zor :)</li>
-            </ul>
           </div>
         </div>
       </div>
@@ -278,5 +293,9 @@
 
       document.getElementById('main').innerHTML += '<div id="buttons" class="buttons"><button class="buttonUndo" id="buttonUndo" onclick="undo()">GERİ AL</button><button class="buttonReset" onclick="reset()">BAŞTAN BAŞLA</button></div>';
     </script>
+
+    <!-- Bootstrap JavaScript Kütüphaneleri -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
