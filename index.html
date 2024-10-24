@@ -11,7 +11,7 @@
       }
       #main {
         width: 100%;
-        height: auto;
+        max-width: 500px; /* Maksimum genişlik ayarlandı */
         display: flex;
         align-items: center;
         justify-content: center;
@@ -21,24 +21,21 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        flex-wrap: wrap;
         width: 100%;
       }
       .squareDiv {
         color: #fafafa;
         border-radius: 0.3rem;
-        margin: 5px;
+        margin: 2px;
         border: 1px solid #ddd;
-        height: 10vw; /* Ekran genişliğine göre ayarlandı */
-        width: 10vw;  /* Ekran genişliğine göre ayarlandı */
-        max-width: 50px; /* Maksimum boyut sınırı */
-        max-height: 50px; /* Maksimum boyut sınırı */
+        width: calc(100% / 10 - 4px); /* 10x10 sabit kare düzeni */
+        height: calc(100% / 10 - 4px); /* Karelerin genişliği ve yüksekliği sabit */
         display: flex;
         align-content: center;
         justify-content: center;
         align-items: center;
         font-weight: 600;
-        font-size: calc(0.8rem + 1vw); /* Boyutlar mobil ve masaüstü için optimize edildi */
+        font-size: calc(0.8rem + 1vw); /* Mobil ve masaüstü için optimize */
       }
       .clickable {
         cursor: pointer;
@@ -58,6 +55,7 @@
       }
       .buttons {
         width: 100%;
+        max-width: 500px;
         margin-top: 20px;
         display: flex;
         justify-content: space-around;
@@ -94,19 +92,13 @@
 
       @media (max-width: 768px) {
         .squareDiv {
-          height: 12vw;
-          width: 12vw;
-          max-width: 40px;
-          max-height: 40px;
+          font-size: calc(0.5rem + 1vw);
         }
       }
 
       @media (max-width: 576px) {
         .squareDiv {
-          height: 15vw;
-          width: 15vw;
-          max-width: 35px;
-          max-height: 35px;
+          font-size: calc(0.4rem + 1vw);
         }
         .buttonUndo, .buttonReset {
           width: 100%;
