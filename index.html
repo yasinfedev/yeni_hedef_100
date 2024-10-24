@@ -78,7 +78,7 @@
         font-weight: 700;
         cursor: pointer;
         font-size: 1rem;
-        z-index: 10; /* Butonlar önde olacak */
+        z-index: 100; /* Butonlar önde olacak */
         pointer-events: auto; /* Butonlara tıklanabilirlik sağlanır */
       }
       .buttonReset {
@@ -111,8 +111,8 @@
         position: absolute;
         top: 0;
         left: 0;
-        width: calc(100% / 10 * 10); /* Oyun alanına göre genişlik */
-        height: calc(100% / 10 * 10); /* Oyun alanına göre yükseklik */
+        width: 100%; /* Oyun alanına göre genişlik */
+        height: 100%; /* Oyun alanına göre yükseklik */
         z-index: 999;
         display: none;
         justify-content: center;
@@ -146,34 +146,6 @@
   </head>
 
   <body>
-    <!-- Akordiyon Menü -->
-    <div class="accordion" id="accordionExample">
-      <div class="card">
-        <div class="card-header" id="headingOne">
-          <h2 class="mb-0">
-            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-              Oyun Hakkında Bilgi ve Kurallar
-            </button>
-          </h2>
-        </div>
-
-        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-          <div class="card-body">
-            Hedef 100, 2000 öncesi yıllardan kalma, kağıt üzerinde çizilerek oynanan bir zeka ve strateji oyununun kodlamaya dökülmüş halidir.<br>
-            Bu oyunda amaç, oyun sahasındaki 100 kareden istediğiniz birine tıklayarak 1 rakamını yerleştirmek. Bundan sonraki her bir kareye tıklamanızda, yerleştirilen sayılar birer birer sırayla artacak. Hedefimiz 100'e ulaşabilmek!<hr>
-            <ul>
-              <b> KURALLAR:</b>
-              <li>Oyunda istediğiniz bir kareden başlayabilirsiniz.</li>
-              <li>Bir sonraki sayıyı, yatay ve dikey düzlemde komşu 3.kareye, çapraz düzlemde ise komşu 2.kareye yerleştirebilirsiniz (Çok şanslısınız, oyun motorumuz size gidilebilir kareleri gösteriyor).</li>
-              <li>Hamle geri alabilirsiniz, ancak sadece 3 kere! Hakkınız bittiğinde artık hamle geri alma şansınız kalmaz.</li>
-              <li>Baştan başlamak isterseniz bunu alttaki kırmızı buton ile yapabilirsiniz.</li>
-              <li>Oyun basit gibi görünse de, 100'e ulaşmak epey bir güç. İmkansız değil, 100'e ulaşmanın çok fazla yolu var ancak belirttiğimiz gibi biraz zor :)</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- Geri Sayım Kartı -->
     <div id="overlay" class="overlay-card">
       <div class="card">
@@ -303,7 +275,7 @@
 
       // Oyun İçeriği ve Fonksiyonlar
       localStorage.setItem("squareCount", 10);
-      localStorage.setItem("totalSquare", localStorage.getItem("squareCount") * localStorage.getItem("squareCount"));
+      localStorage.setItem("totalSquare", localStorage.getItem("squareCount")*localStorage.getItem("squareCount"));
       localStorage.setItem("minX", 1);
       localStorage.setItem("maxX", localStorage.getItem("squareCount"));
       localStorage.setItem("minY", 1);
@@ -322,7 +294,7 @@
 
       for (let i = 1; i <= localStorage.getItem("squareCount"); i++) {
         for (let j = 1; j <= localStorage.getItem("squareCount"); j++) {  // Hata burada düzeltiliyor
-          document.getElementById(i + 'Row').innerHTML += '<div id="x' + j + 'y' + i + '" class="clickable squareDiv" data-x="' + j + '" data-y="' + i + '" onclick="clickSquare(' + j + ',' + i + ')"></div>';
+          document.getElementById(i + 'Row').innerHTML += '<div id="x' + j + 'y' + i + '" class="clickable squareDiv" data-x="'+j+'" data-y="'+i+'" onclick="clickSquare('+j+','+i+')"></div>';
         }
       }
 
