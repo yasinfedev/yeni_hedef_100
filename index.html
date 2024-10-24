@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
     <title>Hedef 100 Oyunu</title>
     <style type="text/css">
@@ -78,6 +78,8 @@
         font-weight: 700;
         cursor: pointer;
         font-size: 1rem;
+        z-index: 10; /* Butonlar önde olacak */
+        pointer-events: auto; /* Butonlara tıklanabilirlik sağlanır */
       }
       .buttonReset {
         background-color: red;
@@ -116,12 +118,14 @@
         justify-content: center;
         align-items: center;
         background-color: rgba(0, 0, 0, 0.7); /* Arka plan yarı saydam */
+        pointer-events: none; /* Diğer elementlerin tıklanabilir olmasını sağla */
       }
       .overlay-card .card {
         width: 80%;
         background-color: white;
         padding: 20px;
         text-align: center;
+        z-index: 1000; /* Canvas'ın üstünde olsun */
       }
       @media (max-width: 768px) {
         .squareDiv {
@@ -317,7 +321,7 @@
       }
 
       for (let i = 1; i <= localStorage.getItem("squareCount"); i++) {
-        for (let j = 1; j <= localStorage.getItem("squareCount"); j++) {
+        for (let j = 1; i <= localStorage.getItem("squareCount"); j++) {
           document.getElementById(i+'Row').innerHTML += '<div id="x'+j+'y'+i+'" class="clickable squareDiv" data-x="'+j+'" data-y="'+i+'" onclick="clickSquare('+j+','+i+')"></div>';
         }
       }
