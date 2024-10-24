@@ -11,6 +11,7 @@
         height: 100%;
         margin: 0;
         padding: 0;
+        overflow: hidden;
       }
       #main {
         width: 100%;
@@ -19,6 +20,7 @@
         align-items: center;
         justify-content: center;
         flex-direction: column;
+        position: relative;
       }
       .rowDiv {
         display: flex;
@@ -177,6 +179,18 @@
       </div>
     </div>
 
+    <!-- Oyun Sonu Kartı -->
+    <div id="gameEndOverlay" class="overlay-card">
+      <div class="card">
+        <div class="card-body">
+          <h3>Oyun Bitti!</h3>
+          <p>Toplam Puan: <span id="finalScore"></span></p>
+          <p>Geçen Süre: <span id="finalTime"></span></p>
+          <p>Toplam Hamle: <span id="finalMoves"></span></p>
+        </div>
+      </div>
+    </div>
+
     <!-- Oyun alanı -->
     <div class="jumbotron alert alert-primary text-center" style="font-weight:bold; font-size:24px; color:black">HEDEF 100 OYUNU</div>
     <div class="container">
@@ -199,9 +213,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Oyun Sonu Ekranı -->
-    <div id="gameEndOverlay" style="display: none;">Oyun Bitti! <br> Toplam Puan: <span id="finalScore"></span><br> Geçen Süre: <span id="finalTime"></span><br> Toplam Hamle: <span id="finalMoves"></span></div>
 
     <script type="text/javascript">
       // Geri sayım ve oyun başlangıcı
