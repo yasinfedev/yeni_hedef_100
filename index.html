@@ -303,7 +303,7 @@
 
       // Oyun İçeriği ve Fonksiyonlar
       localStorage.setItem("squareCount", 10);
-      localStorage.setItem("totalSquare", localStorage.getItem("squareCount")*localStorage.getItem("squareCount"));
+      localStorage.setItem("totalSquare", localStorage.getItem("squareCount") * localStorage.getItem("squareCount"));
       localStorage.setItem("minX", 1);
       localStorage.setItem("maxX", localStorage.getItem("squareCount"));
       localStorage.setItem("minY", 1);
@@ -321,8 +321,8 @@
       }
 
       for (let i = 1; i <= localStorage.getItem("squareCount"); i++) {
-        for (let j = 1; i <= localStorage.getItem("squareCount"); j++) {
-          document.getElementById(i+'Row').innerHTML += '<div id="x'+j+'y'+i+'" class="clickable squareDiv" data-x="'+j+'" data-y="'+i+'" onclick="clickSquare('+j+','+i+')"></div>';
+        for (let j = 1; j <= localStorage.getItem("squareCount"); j++) {  // Hata burada düzeltiliyor
+          document.getElementById(i + 'Row').innerHTML += '<div id="x' + j + 'y' + i + '" class="clickable squareDiv" data-x="' + j + '" data-y="' + i + '" onclick="clickSquare(' + j + ',' + i + ')"></div>';
         }
       }
 
@@ -334,36 +334,36 @@
 
       function openSquares(x, y) {
         let clickable = 0;
-        if ((x - 3) > 0 && !document.getElementById('x'+(x-3)+'y'+(y)).classList.contains('clicked')) {
-          document.getElementById('x'+(x-3)+'y'+(y)).classList.add('clickable');
+        if ((x - 3) > 0 && !document.getElementById('x' + (x - 3) + 'y' + y).classList.contains('clicked')) {
+          document.getElementById('x' + (x - 3) + 'y' + y).classList.add('clickable');
           clickable += 1;
         }
-        if ((x + 3) <= localStorage.getItem("squareCount") && !document.getElementById('x'+(x+3)+'y'+(y)).classList.contains('clicked')) {
-          document.getElementById('x'+(x+3)+'y'+(y)).classList.add('clickable');
+        if ((x + 3) <= localStorage.getItem("squareCount") && !document.getElementById('x' + (x + 3) + 'y' + y).classList.contains('clicked')) {
+          document.getElementById('x' + (x + 3) + 'y' + y).classList.add('clickable');
           clickable += 1;
         }
-        if ((y - 3) > 0 && !document.getElementById('x'+(x)+'y'+(y-3)).classList.contains('clicked')) {
-          document.getElementById('x'+(x)+'y'+(y-3)).classList.add('clickable');
+        if ((y - 3) > 0 && !document.getElementById('x' + x + 'y' + (y - 3)).classList.contains('clicked')) {
+          document.getElementById('x' + x + 'y' + (y - 3)).classList.add('clickable');
           clickable += 1;
         }
-        if ((y + 3) <= localStorage.getItem("squareCount") && !document.getElementById('x'+(x)+'y'+(y+3)).classList.contains('clicked')) {
-          document.getElementById('x'+(x)+'y'+(y+3)).classList.add('clickable');
+        if ((y + 3) <= localStorage.getItem("squareCount") && !document.getElementById('x' + x + 'y' + (y + 3)).classList.contains('clicked')) {
+          document.getElementById('x' + x + 'y' + (y + 3)).classList.add('clickable');
           clickable += 1;
         }
-        if (((x - 2) > 0) && ((y - 2) > 0) && !document.getElementById('x'+(x-2)+'y'+(y-2)).classList.contains('clicked')) {
-          document.getElementById('x'+(x-2)+'y'+(y-2)).classList.add('clickable');
+        if ((x - 2) > 0 && (y - 2) > 0 && !document.getElementById('x' + (x - 2) + 'y' + (y - 2)).classList.contains('clicked')) {
+          document.getElementById('x' + (x - 2) + 'y' + (y - 2)).classList.add('clickable');
           clickable += 1;
         }
-        if (((x - 2) > 0) && ((y + 2) <= localStorage.getItem("squareCount")) && !document.getElementById('x'+(x-2)+'y'+(y+2)).classList.contains('clicked')) {
-          document.getElementById('x'+(x-2)+'y'+(y+2)).classList.add('clickable');
+        if ((x - 2) > 0 && (y + 2) <= localStorage.getItem("squareCount") && !document.getElementById('x' + (x - 2) + 'y' + (y + 2)).classList.contains('clicked')) {
+          document.getElementById('x' + (x - 2) + 'y' + (y + 2)).classList.add('clickable');
           clickable += 1;
         }
-        if (((x + 2) <= localStorage.getItem("squareCount")) && ((y - 2) > 0) && !document.getElementById('x'+(x+2)+'y'+(y-2)).classList.contains('clicked')) {
-          document.getElementById('x'+(x+2)+'y'+(y-2)).classList.add('clickable');
+        if ((x + 2) <= localStorage.getItem("squareCount") && (y - 2) > 0 && !document.getElementById('x' + (x + 2) + 'y' + (y - 2)).classList.contains('clicked')) {
+          document.getElementById('x' + (x + 2) + 'y' + (y - 2)).classList.add('clickable');
           clickable += 1;
         }
-        if (((x + 2) <= localStorage.getItem("squareCount")) && ((y + 2) <= localStorage.getItem("squareCount")) && !document.getElementById('x'+(x+2)+'y'+(y+2)).classList.contains('clicked')) {
-          document.getElementById('x'+(x+2)+'y'+(y+2)).classList.add('clickable');
+        if ((x + 2) <= localStorage.getItem("squareCount") && (y + 2) <= localStorage.getItem("squareCount") && !document.getElementById('x' + (x + 2) + 'y' + (y + 2)).classList.contains('clicked')) {
+          document.getElementById('x' + (x + 2) + 'y' + (y + 2)).classList.add('clickable');
           clickable += 1;
         }
         return clickable;
