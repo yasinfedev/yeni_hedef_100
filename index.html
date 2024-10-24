@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <title>Hedef 100 oyunu</title>
+    <style type="text/css">
+      html {
+        font-family: Gill Sans, sans-serif;
+      }
+      #main {
+        width: 100%;
+        height: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+      .rowDiv {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        width: 100%;
+      }
+      .squareDiv {
+        color: #fafafa;
+        border-radius: 0.3rem;
+        margin: 5px;
+        border: 1px solid #ddd;
+        height: 10vw; /* Ekran genişliğine göre ayarlandı */
+        width: 10vw;  /* Ekran genişliğine göre ayarlandı */
+        max-width: 50px; /* Maksimum boyut sınırı */
+        max-height: 50px; /* Maksimum boyut sınırı */
+        display: flex;
+        align-content: center;
+        justify-content: center;
+        align-items: center;
+        font-weight: 600;
+        font-size: calc(0.8rem + 1vw); /* Boyutlar mobil ve masaüstü için optimize edildi */
+      }
+      .clickable {
+        cursor: pointer;
+        background-color: #ddffdd;
+      }
+      .score {
+        margin-top: 2rem;
+        font-weight: 600;
+        display: block;
+        font-size: 1.5rem;
+      }
+      .score span {
+        font-size: 2rem;
+        display: block;
+        text-align: center;
+        margin-top: 5px;
+      }
+      .buttons {
+        width: 100%;
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+      }
+      .buttonUndo, .buttonReset {
+        padding: 10px;
+        width: 48%;
+        margin: 0;
+        background-color: darkgreen;
+        color: #fafafa;
+        border: none;
+        border-radius: 0.3rem;
+        font-weight: 700;
+        cursor: pointer;
+        font-size: 1rem;
+      }
+      .buttonReset {
+        background-color: red;
+      }
+      .buttonUndo:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      .clicked {
+        background-color: red;
+      }
+      .lastClicked {
+        background-color: blue;
+      }
+      #score, #scoreSpan {
+        margin-top: 0;
+      }
+
+      @media (max-width: 768px) {
+        .squareDiv {
+          height: 12vw;
+          width: 12vw;
+          max-width: 40px;
+          max-height: 40px;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .squareDiv {
+          height: 15vw;
+          width: 15vw;
+          max-width: 35px;
+          max-height: 35px;
+        }
+        .buttonUndo, .buttonReset {
+          width: 100%;
+          margin-bottom: 10px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="jumbotron alert alert-primary text-center" style="font-weight:bold; font-size:24px; color:black">HEDEF 100 OYUNU</div>
+    <div class="container">
+      <div class="alert alert-info" role="alert">
+        Hedef 100, 2000 öncesi yıllardan kalma, kağıt üzerinde çizilerek oynanan bir zeka ve strateji oyununun kodlamaya dökülmüş halidir.<br>
+        Bu oyunda amaç, oyun sahasındaki 100 kareden istediğiniz birine tıklayarak 1 rakamını yerleştirmek. Bundan sonraki her bir kareye tıklamanızda, yerleştirilen sayılar birer birer sırayla artacak. Hedefimiz 100'e ulaşabilmek!<hr>
+        Oyun kuralları için <a href="#kurallar">tıklayın.</a>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <div class="container">
+            <div class="row">
+              <div class="w-100">
+                <div id="main"></div>
+                <hr>
+              </div>
+            </div>
+          </div>
+          <div class="alert alert-info" role="alert" id="kurallar">
+            <ul>
+              <b>KURALLAR:</b>
+              <li>Oyunda istediğiniz bir kareden başlayabilirsiniz.</li>
+              <li>Bir sonraki sayıyı, yatay ve dikey düzlemde komşu 3.kareye, çapraz düzlemde ise komşu 2.kareye yerleştirebilirsiniz (Çok şanslısınız, oyun motorumuz size gidilebilir kareleri gösteriyor).</li>
+              <li>Hamle geri alabilirsiniz, ancak sadece 3 kere! Hakkınız bittiğinde artık hamle geri alma şansınız kalmaz.</li>
+              <li>Baştan başlamak isterseniz bunu alttaki kırmızı buton ile yapabilirsiniz.</li>
+              <li>Oyun basit gibi görünse de, 100'e ulaşmak epey bir güç. İmkansız değil, 100'e ulaşmanın çok fazla yolu var ancak belirttiğimiz gibi biraz zor :)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      localStorage.setItem("squareCount", 10);
+      localStorage.setItem("totalSquare", localStorage.getItem("squareCount")*localStorage.getItem("squareCount"));
+      localStorage.setItem("minX", 1);
+      localStorage.setItem("maxX", localStorage.getItem("squareCount"));
+      localStorage.setItem("minY", 1);
+      localStorage.setItem("maxY", localStorage.getItem("squareCount"));
+      localStorage.setItem("score", 0);
+      localStorage.setItem("squareHistory", JSON.stringify([]));
+      localStorage.setItem("historyNumber", 3);
+
+      let mainDiv = document.getElementById('main');
+      document.getElementById('main').innerHTML += '<div id="score" class="score">Skorunuz: <span id="scoreSpan">0</span></div>';
+      mainDiv.innerHTML += '<div style="display: none;" id="beforeSquare"></div>';
+
+      for (let a = 1; a <= localStorage.getItem("squareCount"); a++) {
+        mainDiv.innerHTML += '<div class="rowDiv" id="'+a+'Row"></div>';
+      }
+
+      for (let i = 1; i <= localStorage.getItem("squareCount"); i++) {
+        for (let j = 1; j <= localStorage.getItem("squareCount"); j++) {
+          document.getElementById(i+'Row').innerHTML += '<div id="x'+j+'y'+i+'" class="clickable squareDiv" data-x="'+j+'" data-y="'+i+'" onclick="clickSquare('+j+','+i+')"></div>';
+        }
+      }
+
+      function closeAllSquares() {
+        Array.from(document.getElementsByClassName('squareDiv')).forEach(function(square) {
+          square.classList.remove('clickable');
+        });
+      }
+
+      function openSquares(x, y) {
+        let clickable = 0;
+        if ((x - 3) > 0 && !document.getElementById('x'+(x-3)+'y'+(y)).classList.contains('clicked')) {
+          document.getElementById('x'+(x-3)+'y'+(y)).classList.add('clickable');
+          clickable += 1;
+        }
+        if ((x + 3) <= localStorage.getItem("squareCount") && !document.getElementById('x'+(x+3)+'y'+(y)).classList.contains('clicked')) {
+          document.getElementById('x'+(x+3)+'y'+(y)).classList.add('clickable');
+          clickable += 1;
+        }
+        if ((y - 3) > 0 && !document.getElementById('x'+(x)+'y'+(y-3)).classList.contains('clicked')) {
+          document.getElementById('x'+(x)+'y'+(y-3)).classList.add('clickable');
+          clickable += 1;
+        }
+        if ((y + 3) <= localStorage.getItem("squareCount") && !document.getElementById('x'+(x)+'y'+(y+3)).classList.contains('clicked')) {
+          document.getElementById('x'+(x)+'y'+(y+3)).classList.add('clickable');
+          clickable += 1;
+        }
+        if (((x - 2) > 0) && ((y - 2) > 0) && !document.getElementById('x'+(x-2)+'y'+(y-2)).classList.contains('clicked')) {
+          document.getElementById('x'+(x-2)+'y'+(y-2)).classList.add('clickable');
+          clickable += 1;
+        }
+        if (((x - 2) > 0) && ((y + 2) <= localStorage.getItem("squareCount")) && !document.getElementById('x'+(x-2)+'y'+(y+2)).classList.contains('clicked')) {
+          document.getElementById('x'+(x-2)+'y'+(y+2)).classList.add('clickable');
+          clickable += 1;
+        }
+        if (((x + 2) <= localStorage.getItem("squareCount")) && ((y - 2) > 0) && !document.getElementById('x'+(x+2)+'y'+(y-2)).classList.contains('clicked')) {
+          document.getElementById('x'+(x+2)+'y'+(y-2)).classList.add('clickable');
+          clickable += 1;
+        }
+        if (((x + 2) <= localStorage.getItem("squareCount")) && ((y + 2) <= localStorage.getItem("squareCount")) && !document.getElementById('x'+(x+2)+'y'+(y+2)).classList.contains('clicked')) {
+          document.getElementById('x'+(x+2)+'y'+(y+2)).classList.add('clickable');
+          clickable += 1;
+        }
+        return clickable;
+      }
+
+      function cantClickable() {
+        alert('Oops! Dostum, buraya tıklayamazsın!');
+      }
+
+      function clickSquare(x, y) {
+        let clickedItem = document.getElementById('x' + x + 'y' + y);
+        if (!clickedItem.classList.contains('clickable')) {
+          cantClickable();
+        } else {
+          let lastClicked = document.querySelector('.lastClicked');
+          if (lastClicked) {
+            lastClicked.classList.remove('lastClicked');
+            lastClicked.classList.add('clicked');
+          }
+          clickedItem.classList.add("clicked", "lastClicked");
+          clickedItem.innerText = parseInt(localStorage.getItem("score")) + 1;
+          localStorage.setItem("score", (parseInt(localStorage.getItem("score")) + 1));
+          let array = JSON.parse(localStorage.getItem('squareHistory'));
+          array.push([x, y]);
+          localStorage.setItem("squareHistory", JSON.stringify(array));
+          document.getElementById('scoreSpan').innerText = localStorage.getItem("score");
+          clickedItem.classList.add('clicked');
+          clickedItem.classList.remove('clickable');
+          closeAllSquares();
+          let clickable = openSquares(x, y);
+          if (clickable == 0) {
+            alert('Dostum, oyun bitmiş gibi görünüyor... Skorunu da söyleyeyim: ' + localStorage.getItem("score"));
+          }
+        }
+      }
+
+      function reset() {
+        location.reload();
+      }
+
+      function undo() {
+        let array = JSON.parse(localStorage.getItem('squareHistory'));
+        if (array.length === 0) {
+          alert('Sakin ol dostum, geri alacak bir şey yok, kötü bir şey yapmadın.');
+          return;
+        }
+        let lastElement = array.pop();
+        localStorage.setItem('squareHistory', JSON.stringify(array));
+        let prevCellCoords = array[array.length - 1];
+        if (prevCellCoords) {
+          document.getElementById('x' + prevCellCoords[0] + 'y' + prevCellCoords[1]).classList.add('lastClicked');
+        }
+        localStorage.setItem("score", parseInt(localStorage.getItem("score")) - 1);
+        document.getElementById('scoreSpan').innerText = localStorage.getItem("score");
+        let lastItem = document.getElementById('x' + lastElement[0] + 'y' + lastElement[1]);
+        lastItem.innerHTML = null;
+        lastItem.style.backgroundColor = '';
+        lastItem.classList.remove('clicked', 'lastClicked');
+        lastItem.classList.add('clickable');
+        localStorage.setItem("historyNumber", parseInt(localStorage.getItem("historyNumber")) - 1);
+        if (localStorage.getItem("historyNumber") <= 0) {
+          document.getElementById("buttonUndo").disabled = true;
+          document.getElementById("buttonUndo").innerText = "HAK BİTTİ";
+        }
+        closeAllSquares();
+        if (array.length > 0) {
+          lastElement = array.pop();
+          openSquares(lastElement[0], lastElement[1]);
+        } else {
+          reset();
+        }
+      }
+
+      document.getElementById('main').innerHTML += '<div id="buttons" class="buttons"><button class="buttonUndo" id="buttonUndo" onclick="undo()">GERİ AL</button><button class="buttonReset" onclick="reset()">BAŞTAN BAŞLA</button></div>';
+    </script>
+  </body>
+</html>
