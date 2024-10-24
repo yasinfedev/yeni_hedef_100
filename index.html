@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
     <title>Hedef 100 Oyunu</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
     <style type="text/css">
       html, body {
         font-family: Gill Sans, sans-serif;
@@ -99,20 +100,20 @@
       #gameInfo {
         display: flex;
         justify-content: space-between;
-        font-size: 0.9rem; /* Küçük font */
+        font-size: 0.9rem;
         margin-bottom: 10px;
       }
       .overlay-card {
         position: absolute;
         top: 0;
         left: 0;
-        width: calc(100% / 10 * 10); /* Oyun alanına göre genişlik */
-        height: calc(100% / 10 * 10); /* Oyun alanına göre yükseklik */
+        width: 100%;
+        height: 100%;
         z-index: 999;
         display: none;
         justify-content: center;
         align-items: center;
-        background-color: rgba(0, 0, 0, 0.7); /* Arka plan yarı saydam */
+        background-color: rgba(0, 0, 0, 0.7);
       }
       .overlay-card .card {
         width: 80%;
@@ -139,34 +140,6 @@
   </head>
 
   <body>
-    <!-- Akordiyon Menü -->
-    <div class="accordion" id="accordionExample">
-      <div class="card">
-        <div class="card-header" id="headingOne">
-          <h2 class="mb-0">
-            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-              Oyun Hakkında Bilgi ve Kurallar
-            </button>
-          </h2>
-        </div>
-
-        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-          <div class="card-body">
-            Hedef 100, 2000 öncesi yıllardan kalma, kağıt üzerinde çizilerek oynanan bir zeka ve strateji oyununun kodlamaya dökülmüş halidir.<br>
-            Bu oyunda amaç, oyun sahasındaki 100 kareden istediğiniz birine tıklayarak 1 rakamını yerleştirmek. Bundan sonraki her bir kareye tıklamanızda, yerleştirilen sayılar birer birer sırayla artacak. Hedefimiz 100'e ulaşabilmek!<hr>
-            <ul>
-              <b> KURALLAR:</b>
-              <li>Oyunda istediğiniz bir kareden başlayabilirsiniz.</li>
-              <li>Bir sonraki sayıyı, yatay ve dikey düzlemde komşu 3.kareye, çapraz düzlemde ise komşu 2.kareye yerleştirebilirsiniz (Çok şanslısınız, oyun motorumuz size gidilebilir kareleri gösteriyor).</li>
-              <li>Hamle geri alabilirsiniz, ancak sadece 3 kere! Hakkınız bittiğinde artık hamle geri alma şansınız kalmaz.</li>
-              <li>Baştan başlamak isterseniz bunu alttaki kırmızı buton ile yapabilirsiniz.</li>
-              <li>Oyun basit gibi görünse de, 100'e ulaşmak epey bir güç. İmkansız değil, 100'e ulaşmanın çok fazla yolu var ancak belirttiğimiz gibi biraz zor :)</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- Geri Sayım Kartı -->
     <div id="overlay" class="overlay-card">
       <div class="card">
@@ -181,10 +154,12 @@
     <div id="gameEndOverlay" class="overlay-card">
       <div class="card">
         <div class="card-body">
-          <h3>Oyun Bitti!</h3>
+          <h3>Hedef 100 oyunu bitti!</h3>
           <p>Toplam Puan: <span id="finalScore"></span></p>
           <p>Geçen Süre: <span id="finalTime"></span></p>
           <p>Toplam Hamle: <span id="finalMoves"></span></p>
+          <button id="playAgain" class="btn btn-success">Tekrar Oyna</button>
+          <button id="shareGame" class="btn btn-primary">Paylaş</button>
         </div>
       </div>
     </div>
@@ -192,12 +167,11 @@
     <!-- Oyun alanı -->
     <div class="jumbotron alert alert-primary text-center" style="font-weight:bold; font-size:24px; color:black">HEDEF 100 OYUNU</div>
     <div class="container">
-      <!-- Skorun hemen altında süre ve hamle sayacı -->
       <div id="gameInfo">
         <div id="gameTimer">00:00</div>
         <div id="moveCounter">Hamle: 0</div>
       </div>
-      
+
       <div class="card mt-3">
         <div class="card-body">
           <div class="container">
@@ -213,7 +187,6 @@
     </div>
 
     <script type="text/javascript">
-      // Geri sayım ve oyun başlangıcı
       let countdown = 3;
       let overlay = document.getElementById('overlay');
       let countdownElement = document.getElementById('countdown');
@@ -262,11 +235,38 @@
         document.getElementById("finalTime").innerText = finalTime;
         document.getElementById("finalMoves").innerText = finalMoves;
         document.getElementById("gameEndOverlay").style.display = 'flex';
+
+        // Tekrar Oyna Butonu
+        document.getElementById("playAgain").addEventListener("click", function() {
+          document.getElementById("gameEndOverlay").style.display = 'none';
+          resetGame();
+        });
+
+        // Paylaş Butonu (jpeg olarak indirme)
+        document.getElementById("shareGame").addEventListener("click", function() {
+          html2canvas(document.getElementById("gameEndOverlay"), {
+            onrendered: function(canvas) {
+              let link = document.createElement('a');
+              link.href = canvas.toDataURL('image/jpeg');
+              link.download = 'hedef_100_oyunu_sonuc.jpg';
+              link.click();
+            }
+          });
+        });
+      }
+
+      function resetGame() {
+        moveCount = 0;
+        seconds = 0;
+        localStorage.setItem("score", 0);
+        timerElement.innerHTML = "00:00";
+        moveCounterElement.innerHTML = "Hamle: 0";
+        location.reload();
       }
 
       // Oyun İçeriği ve Fonksiyonlar
       localStorage.setItem("squareCount", 10);
-      localStorage.setItem("totalSquare", localStorage.getItem("squareCount")*localStorage.getItem("squareCount"));
+      localStorage.setItem("totalSquare", localStorage.getItem("squareCount") * localStorage.getItem("squareCount"));
       localStorage.setItem("minX", 1);
       localStorage.setItem("maxX", localStorage.getItem("squareCount"));
       localStorage.setItem("minY", 1);
@@ -280,12 +280,12 @@
       mainDiv.innerHTML += '<div style="display: none;" id="beforeSquare"></div>';
 
       for (let a = 1; a <= localStorage.getItem("squareCount"); a++) {
-        mainDiv.innerHTML += '<div class="rowDiv" id="'+a+'Row"></div>';
+        mainDiv.innerHTML += '<div class="rowDiv" id="' + a + 'Row"></div>';
       }
 
       for (let i = 1; i <= localStorage.getItem("squareCount"); i++) {
         for (let j = 1; j <= localStorage.getItem("squareCount"); j++) {
-          document.getElementById(i+'Row').innerHTML += '<div id="x'+j+'y'+i+'" class="clickable squareDiv" data-x="'+j+'" data-y="'+i+'" onclick="clickSquare('+j+','+i+')"></div>';
+          document.getElementById(i + 'Row').innerHTML += '<div id="x' + j + 'y' + i + '" class="clickable squareDiv" data-x="' + j + '" data-y="' + i + '" onclick="clickSquare(' + j + ',' + i + ')"></div>';
         }
       }
 
@@ -297,36 +297,36 @@
 
       function openSquares(x, y) {
         let clickable = 0;
-        if ((x - 3) > 0 && !document.getElementById('x'+(x-3)+'y'+(y)).classList.contains('clicked')) {
-          document.getElementById('x'+(x-3)+'y'+(y)).classList.add('clickable');
+        if ((x - 3) > 0 && !document.getElementById('x' + (x - 3) + 'y' + y).classList.contains('clicked')) {
+          document.getElementById('x' + (x - 3) + 'y' + y).classList.add('clickable');
           clickable += 1;
         }
-        if ((x + 3) <= localStorage.getItem("squareCount") && !document.getElementById('x'+(x+3)+'y'+(y)).classList.contains('clicked')) {
-          document.getElementById('x'+(x+3)+'y'+(y)).classList.add('clickable');
+        if ((x + 3) <= localStorage.getItem("squareCount") && !document.getElementById('x' + (x + 3) + 'y' + y).classList.contains('clicked')) {
+          document.getElementById('x' + (x + 3) + 'y' + y).classList.add('clickable');
           clickable += 1;
         }
-        if ((y - 3) > 0 && !document.getElementById('x'+(x)+'y'+(y-3)).classList.contains('clicked')) {
-          document.getElementById('x'+(x)+'y'+(y-3)).classList.add('clickable');
+        if ((y - 3) > 0 && !document.getElementById('x' + x + 'y' + (y - 3)).classList.contains('clicked')) {
+          document.getElementById('x' + x + 'y' + (y - 3)).classList.add('clickable');
           clickable += 1;
         }
-        if ((y + 3) <= localStorage.getItem("squareCount") && !document.getElementById('x'+(x)+'y'+(y+3)).classList.contains('clicked')) {
-          document.getElementById('x'+(x)+'y'+(y+3)).classList.add('clickable');
+        if ((y + 3) <= localStorage.getItem("squareCount") && !document.getElementById('x' + x + 'y' + (y + 3)).classList.contains('clicked')) {
+          document.getElementById('x' + x + 'y' + (y + 3)).classList.add('clickable');
           clickable += 1;
         }
-        if (((x - 2) > 0) && ((y - 2) > 0) && !document.getElementById('x'+(x-2)+'y'+(y-2)).classList.contains('clicked')) {
-          document.getElementById('x'+(x-2)+'y'+(y-2)).classList.add('clickable');
+        if ((x - 2) > 0 && (y - 2) > 0 && !document.getElementById('x' + (x - 2) + 'y' + (y - 2)).classList.contains('clicked')) {
+          document.getElementById('x' + (x - 2) + 'y' + (y - 2)).classList.add('clickable');
           clickable += 1;
         }
-        if (((x - 2) > 0) && ((y + 2) <= localStorage.getItem("squareCount")) && !document.getElementById('x'+(x-2)+'y'+(y+2)).classList.contains('clicked')) {
-          document.getElementById('x'+(x-2)+'y'+(y+2)).classList.add('clickable');
+        if ((x - 2) > 0 && (y + 2) <= localStorage.getItem("squareCount") && !document.getElementById('x' + (x - 2) + 'y' + (y + 2)).classList.contains('clicked')) {
+          document.getElementById('x' + (x - 2) + 'y' + (y + 2)).classList.add('clickable');
           clickable += 1;
         }
-        if (((x + 2) <= localStorage.getItem("squareCount")) && ((y - 2) > 0) && !document.getElementById('x'+(x+2)+'y'+(y-2)).classList.contains('clicked')) {
-          document.getElementById('x'+(x+2)+'y'+(y-2)).classList.add('clickable');
+        if ((x + 2) <= localStorage.getItem("squareCount") && (y - 2) > 0 && !document.getElementById('x' + (x + 2) + 'y' + (y - 2)).classList.contains('clicked')) {
+          document.getElementById('x' + (x + 2) + 'y' + (y - 2)).classList.add('clickable');
           clickable += 1;
         }
-        if (((x + 2) <= localStorage.getItem("squareCount")) && ((y + 2) <= localStorage.getItem("squareCount")) && !document.getElementById('x'+(x+2)+'y'+(y+2)).classList.contains('clicked')) {
-          document.getElementById('x'+(x+2)+'y'+(y+2)).classList.add('clickable');
+        if ((x + 2) <= localStorage.getItem("squareCount") && (y + 2) <= localStorage.getItem("squareCount") && !document.getElementById('x' + (x + 2) + 'y' + (y + 2)).classList.contains('clicked')) {
+          document.getElementById('x' + (x + 2) + 'y' + (y + 2)).classList.add('clickable');
           clickable += 1;
         }
         return clickable;
