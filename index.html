@@ -96,46 +96,11 @@
       #score, #scoreSpan {
         margin-top: 0;
       }
-      #gameTimer, #moveCounter {
-        font-size: 1.5rem;
-        font-weight: bold;
-        margin-bottom: 10px;
-      }
-      #gameTimer {
-        float: left;
-      }
-      #moveCounter {
-        float: right;
-      }
-      #overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0,0,0,0.8);
-        z-index: 999;
+      #gameInfo {
         display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 3rem;
-        font-weight: bold;
-      }
-      #gameEndOverlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0,0,0,0.8);
-        z-index: 999;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 2rem;
-        font-weight: bold;
+        justify-content: space-between;
+        font-size: 0.9rem; /* Küçük font */
+        margin-bottom: 10px;
       }
       @media (max-width: 768px) {
         .squareDiv {
@@ -157,13 +122,16 @@
 
   <body>
     <!-- Başlangıç Ekranı -->
-    <div id="overlay">Hazır mısın?<br>3</div>
+    <div id="overlay" style="display: none;">Hazır mısın?<br>3</div>
 
     <!-- Oyun alanı -->
     <div class="jumbotron alert alert-primary text-center" style="font-weight:bold; font-size:24px; color:black">HEDEF 100 OYUNU</div>
     <div class="container">
-      <div id="gameTimer">00:00</div>
-      <div id="moveCounter">Hamle: 0</div>
+      <!-- Skorun hemen altında süre ve hamle sayacı -->
+      <div id="gameInfo">
+        <div id="gameTimer">00:00</div>
+        <div id="moveCounter">Hamle: 0</div>
+      </div>
       
       <div class="card mt-3">
         <div class="card-body">
@@ -180,7 +148,7 @@
     </div>
 
     <!-- Oyun Sonu Ekranı -->
-    <div id="gameEndOverlay">Oyun Bitti! <br> Toplam Puan: <span id="finalScore"></span><br> Geçen Süre: <span id="finalTime"></span><br> Toplam Hamle: <span id="finalMoves"></span></div>
+    <div id="gameEndOverlay" style="display: none;">Oyun Bitti! <br> Toplam Puan: <span id="finalScore"></span><br> Geçen Süre: <span id="finalTime"></span><br> Toplam Hamle: <span id="finalMoves"></span></div>
 
     <script type="text/javascript">
       // Geri sayım ve oyun başlangıcı
