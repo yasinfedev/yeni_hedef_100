@@ -102,6 +102,24 @@
         font-size: 0.9rem; /* Küçük font */
         margin-bottom: 10px;
       }
+      .overlay-card {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: calc(100% / 10 * 10); /* Oyun alanına göre genişlik */
+        height: calc(100% / 10 * 10); /* Oyun alanına göre yükseklik */
+        z-index: 999;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(0, 0, 0, 0.7); /* Arka plan yarı saydam */
+      }
+      .overlay-card .card {
+        width: 80%;
+        background-color: white;
+        padding: 20px;
+        text-align: center;
+      }
       @media (max-width: 768px) {
         .squareDiv {
           font-size: calc(0.5rem + 1vw);
@@ -121,8 +139,43 @@
   </head>
 
   <body>
-    <!-- Başlangıç Ekranı -->
-    <div id="overlay" style="display: none;">Hazır mısın?<br>3</div>
+    <!-- Akordiyon Menü -->
+    <div class="accordion" id="accordionExample">
+      <div class="card">
+        <div class="card-header" id="headingOne">
+          <h2 class="mb-0">
+            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+              Oyun Hakkında Bilgi ve Kurallar
+            </button>
+          </h2>
+        </div>
+
+        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+          <div class="card-body">
+            Hedef 100, 2000 öncesi yıllardan kalma, kağıt üzerinde çizilerek oynanan bir zeka ve strateji oyununun kodlamaya dökülmüş halidir.<br>
+            Bu oyunda amaç, oyun sahasındaki 100 kareden istediğiniz birine tıklayarak 1 rakamını yerleştirmek. Bundan sonraki her bir kareye tıklamanızda, yerleştirilen sayılar birer birer sırayla artacak. Hedefimiz 100'e ulaşabilmek!<hr>
+            <ul>
+              <b> KURALLAR:</b>
+              <li>Oyunda istediğiniz bir kareden başlayabilirsiniz.</li>
+              <li>Bir sonraki sayıyı, yatay ve dikey düzlemde komşu 3.kareye, çapraz düzlemde ise komşu 2.kareye yerleştirebilirsiniz (Çok şanslısınız, oyun motorumuz size gidilebilir kareleri gösteriyor).</li>
+              <li>Hamle geri alabilirsiniz, ancak sadece 3 kere! Hakkınız bittiğinde artık hamle geri alma şansınız kalmaz.</li>
+              <li>Baştan başlamak isterseniz bunu alttaki kırmızı buton ile yapabilirsiniz.</li>
+              <li>Oyun basit gibi görünse de, 100'e ulaşmak epey bir güç. İmkansız değil, 100'e ulaşmanın çok fazla yolu var ancak belirttiğimiz gibi biraz zor :)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Geri Sayım Kartı -->
+    <div id="overlay" class="overlay-card">
+      <div class="card">
+        <div class="card-body">
+          <h3>Hazır mısın?</h3>
+          <p id="countdown">3</p>
+        </div>
+      </div>
+    </div>
 
     <!-- Oyun alanı -->
     <div class="jumbotron alert alert-primary text-center" style="font-weight:bold; font-size:24px; color:black">HEDEF 100 OYUNU</div>
@@ -154,11 +207,13 @@
       // Geri sayım ve oyun başlangıcı
       let countdown = 3;
       let overlay = document.getElementById('overlay');
+      let countdownElement = document.getElementById('countdown');
+      overlay.style.display = 'flex'; // Kartı görünür yap
       let countdownInterval = setInterval(function() {
-        overlay.innerHTML = `Hazır mısın?<br>${countdown}`;
+        countdownElement.innerHTML = countdown;
         if (countdown === 0) {
           clearInterval(countdownInterval);
-          overlay.style.display = 'none';
+          overlay.style.display = 'none'; // Kartı gizle
           startGame();
         }
         countdown--;
