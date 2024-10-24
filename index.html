@@ -48,14 +48,14 @@
       .score {
         margin-top: 2rem;
         font-weight: 600;
-        display: block;
+        display: flex; /* Aynı satıra almak için flex kullanıldı */
+        align-items: center;
+        justify-content: center;
         font-size: 1.5rem;
       }
       .score span {
         font-size: 2rem;
-        display: block;
-        text-align: center;
-        margin-top: 5px;
+        margin-left: 10px; /* Skor ile metin arasında boşluk için */
       }
       .buttons {
         width: 100%;
@@ -93,9 +93,6 @@
       }
       .lastClicked {
         background-color: blue;
-      }
-      #score, #scoreSpan {
-        margin-top: 0;
       }
       #gameInfo {
         display: flex;
@@ -145,13 +142,13 @@
       <div class="card">
         <div class="card-header" id="headingOne">
           <h2 class="mb-0">
-            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
               Oyun Hakkında Bilgi ve Kurallar
             </button>
           </h2>
         </div>
 
-        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
           <div class="card-body">
             Hedef 100, 2000 öncesi yıllardan kalma, kağıt üzerinde çizilerek oynanan bir zeka ve strateji oyununun kodlamaya dökülmüş halidir.<br>
             Bu oyunda amaç, oyun sahasındaki 100 kareden istediğiniz birine tıklayarak 1 rakamını yerleştirmek. Bundan sonraki her bir kareye tıklamanızda, yerleştirilen sayılar birer birer sırayla artacak. Hedefimiz 100'e ulaşabilmek!<hr>
