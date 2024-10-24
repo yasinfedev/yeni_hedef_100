@@ -4,14 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
-    <title>Hedef 100 oyunu</title>
+    <title>Hedef 100 Oyunu</title>
     <style type="text/css">
-      html {
+      html, body {
         font-family: Gill Sans, sans-serif;
+        height: 100%;
+        margin: 0;
+        padding: 0;
       }
       #main {
         width: 100%;
-        max-width: 500px; /* Maksimum genişlik ayarlandı */
+        max-width: 500px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -28,14 +31,14 @@
         border-radius: 0.3rem;
         margin: 2px;
         border: 1px solid #ddd;
-        width: calc(100% / 10 - 4px); /* 10x10 sabit kare düzeni */
-        aspect-ratio: 1 / 1; /* Kare en ve boy oranını sabitler */
+        width: calc(100% / 10 - 4px);
+        aspect-ratio: 1 / 1;
         display: flex;
         align-content: center;
         justify-content: center;
         align-items: center;
         font-weight: 600;
-        font-size: calc(0.8rem + 1vw); /* Mobil ve masaüstü için optimize */
+        font-size: calc(0.8rem + 1vw);
       }
       .clickable {
         cursor: pointer;
@@ -80,6 +83,10 @@
         opacity: 0.5;
         cursor: not-allowed;
       }
+      .buttonUndo.disabled-black {
+        background-color: black !important;
+        color: white;
+      }
       .clicked {
         background-color: red;
       }
@@ -89,7 +96,47 @@
       #score, #scoreSpan {
         margin-top: 0;
       }
-
+      #gameTimer, #moveCounter {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+      #gameTimer {
+        float: left;
+      }
+      #moveCounter {
+        float: right;
+      }
+      #overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.8);
+        z-index: 999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 3rem;
+        font-weight: bold;
+      }
+      #gameEndOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.8);
+        z-index: 999;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2rem;
+        font-weight: bold;
+      }
       @media (max-width: 768px) {
         .squareDiv {
           font-size: calc(0.5rem + 1vw);
@@ -109,38 +156,15 @@
   </head>
 
   <body>
+    <!-- Başlangıç Ekranı -->
+    <div id="overlay">Hazır mısın?<br>3</div>
+
+    <!-- Oyun alanı -->
     <div class="jumbotron alert alert-primary text-center" style="font-weight:bold; font-size:24px; color:black">HEDEF 100 OYUNU</div>
     <div class="container">
+      <div id="gameTimer">00:00</div>
+      <div id="moveCounter">Hamle: 0</div>
       
-      <!-- Akordeon Menü Başlangıcı -->
-      <div class="accordion" id="accordionExample">
-        <div class="card">
-          <div class="card-header" id="headingOne">
-            <h2 class="mb-0">
-              <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                Oyun Hakkında Bilgi ve Kurallar
-              </button>
-            </h2>
-          </div>
-
-          <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-            <div class="card-body">
-              Hedef 100, 2000 öncesi yıllardan kalma, kağıt üzerinde çizilerek oynanan bir zeka ve strateji oyununun kodlamaya dökülmüş halidir.<br>
-              Bu oyunda amaç, oyun sahasındaki 100 kareden istediğiniz birine tıklayarak 1 rakamını yerleştirmek. Bundan sonraki her bir kareye tıklamanızda, yerleştirilen sayılar birer birer sırayla artacak. Hedefimiz 100'e ulaşabilmek!<hr>
-              <ul>
-                <b> KURALLAR:</b>
-                <li>Oyunda istediğiniz bir kareden başlayabilirsiniz.</li>
-                <li>Bir sonraki sayıyı, yatay ve dikey düzlemde komşu 3.kareye, çapraz düzlemde ise komşu 2.kareye yerleştirebilirsiniz (Çok şanslısınız, oyun motorumuz size gidilebilir kareleri gösteriyor).</li>
-                <li>Hamle geri alabilirsiniz, ancak sadece 3 kere! Hakkınız bittiğinde artık hamle geri alma şansınız kalmaz.</li>
-                <li>Baştan başlamak isterseniz bunu alttaki kırmızı buton ile yapabilirsiniz.</li>
-                <li>Oyun basit gibi görünse de, 100'e ulaşmak epey bir güç. İmkansız değil, 100'e ulaşmanın çok fazla yolu var ancak belirttiğimiz gibi biraz zor :)</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Akordeon Menü Sonu -->
-
       <div class="card mt-3">
         <div class="card-body">
           <div class="container">
@@ -155,7 +179,60 @@
       </div>
     </div>
 
+    <!-- Oyun Sonu Ekranı -->
+    <div id="gameEndOverlay">Oyun Bitti! <br> Toplam Puan: <span id="finalScore"></span><br> Geçen Süre: <span id="finalTime"></span><br> Toplam Hamle: <span id="finalMoves"></span></div>
+
     <script type="text/javascript">
+      // Geri sayım ve oyun başlangıcı
+      let countdown = 3;
+      let overlay = document.getElementById('overlay');
+      let countdownInterval = setInterval(function() {
+        overlay.innerHTML = `Hazır mısın?<br>${countdown}`;
+        if (countdown === 0) {
+          clearInterval(countdownInterval);
+          overlay.style.display = 'none';
+          startGame();
+        }
+        countdown--;
+      }, 1000);
+
+      // Sayaçlar
+      let moveCount = 0;
+      let seconds = 0;
+      let timerInterval;
+      let timerElement = document.getElementById('gameTimer');
+      let moveCounterElement = document.getElementById('moveCounter');
+
+      function startGame() {
+        timerInterval = setInterval(updateTimer, 1000);
+      }
+
+      function updateTimer() {
+        seconds++;
+        let minutes = Math.floor(seconds / 60);
+        let displaySeconds = seconds % 60;
+        if (displaySeconds < 10) displaySeconds = '0' + displaySeconds;
+        timerElement.innerHTML = `${minutes}:${displaySeconds}`;
+      }
+
+      function updateMoveCounter() {
+        moveCount++;
+        moveCounterElement.innerHTML = `Hamle: ${moveCount}`;
+      }
+
+      // Oyun Bittiğinde Gösterilecek Bilgiler
+      function endGame() {
+        clearInterval(timerInterval);
+        let finalScore = localStorage.getItem("score");
+        let finalTime = timerElement.innerHTML;
+        let finalMoves = moveCount;
+        document.getElementById("finalScore").innerText = finalScore;
+        document.getElementById("finalTime").innerText = finalTime;
+        document.getElementById("finalMoves").innerText = finalMoves;
+        document.getElementById("gameEndOverlay").style.display = 'flex';
+      }
+
+      // Oyun İçeriği ve Fonksiyonlar
       localStorage.setItem("squareCount", 10);
       localStorage.setItem("totalSquare", localStorage.getItem("squareCount")*localStorage.getItem("squareCount"));
       localStorage.setItem("minX", 1);
@@ -248,8 +325,9 @@
           clickedItem.classList.remove('clickable');
           closeAllSquares();
           let clickable = openSquares(x, y);
+          updateMoveCounter();
           if (clickable == 0) {
-            alert('Dostum, oyun bitmiş gibi görünüyor... Skorunu da söyleyeyim: ' + localStorage.getItem("score"));
+            endGame();
           }
         }
       }
@@ -279,8 +357,10 @@
         lastItem.classList.add('clickable');
         localStorage.setItem("historyNumber", parseInt(localStorage.getItem("historyNumber")) - 1);
         if (localStorage.getItem("historyNumber") <= 0) {
-          document.getElementById("buttonUndo").disabled = true;
-          document.getElementById("buttonUndo").innerText = "HAK BİTTİ";
+          let buttonUndo = document.getElementById("buttonUndo");
+          buttonUndo.disabled = true;
+          buttonUndo.innerText = "HAK BİTTİ"; 
+          buttonUndo.classList.add("disabled-black");
         }
         closeAllSquares();
         if (array.length > 0) {
@@ -294,7 +374,6 @@
       document.getElementById('main').innerHTML += '<div id="buttons" class="buttons"><button class="buttonUndo" id="buttonUndo" onclick="undo()">GERİ AL</button><button class="buttonReset" onclick="reset()">BAŞTAN BAŞLA</button></div>';
     </script>
 
-    <!-- Bootstrap JavaScript Kütüphaneleri -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
   </body>
