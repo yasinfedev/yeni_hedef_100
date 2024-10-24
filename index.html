@@ -373,6 +373,32 @@
         }
       }
 
+      // Geri al fonksiyonu
+      function undo() {
+        let historyArray = JSON.parse(localStorage.getItem('squareHistory'));
+        if (historyArray.length === 0) {
+          alert("Geri alınacak hamle yok!");
+          return;
+        }
+        
+        // Son hamleyi geri al
+        let lastMove = historyArray.pop();
+        localStorage.setItem('squareHistory', JSON.stringify(historyArray));
+        
+        // Hamlenin bulunduğu hücreyi temizle
+        let lastItem = document.getElementById('x' + lastMove[0] + 'y' + lastMove[1]);
+        lastItem.innerHTML = '';
+        lastItem.classList.remove('clicked');
+        lastItem.classList.add('clickable');
+        
+        // Skoru ve hamle sayısını geri al
+        let currentScore = parseInt(localStorage.getItem("score")) - 1;
+        localStorage.setItem("score", currentScore);
+        document.getElementById('scoreSpan').innerText = currentScore;
+        
+        updateMoveCounter();
+      }
+
       function reset() {
         location.reload();
       }
