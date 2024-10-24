@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
-    <title>Hedef 100 Oyunu</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    <title>Hedef 100 Oyunu</title>
     <style type="text/css">
       html, body {
         font-family: Gill Sans, sans-serif;
@@ -39,7 +39,7 @@
         justify-content: center;
         align-items: center;
         font-weight: 600;
-        font-size: calc(0.8rem + 1vw);
+        font-size: calc(1.5rem + 1vw); /* Font büyütüldü */
       }
       .clickable {
         cursor: pointer;
@@ -123,13 +123,13 @@
       }
       @media (max-width: 768px) {
         .squareDiv {
-          font-size: calc(0.5rem + 1vw);
+          font-size: calc(1.2rem + 1vw); /* Mobil için ayarladım */
         }
       }
 
       @media (max-width: 576px) {
         .squareDiv {
-          font-size: calc(0.4rem + 1vw);
+          font-size: calc(1rem + 1vw);
         }
         .buttonUndo, .buttonReset {
           width: 100%;
@@ -140,6 +140,34 @@
   </head>
 
   <body>
+    <!-- Akordiyon Menü -->
+    <div class="accordion" id="accordionExample">
+      <div class="card">
+        <div class="card-header" id="headingOne">
+          <h2 class="mb-0">
+            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+              Oyun Hakkında Bilgi ve Kurallar
+            </button>
+          </h2>
+        </div>
+
+        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+          <div class="card-body">
+            Hedef 100, 2000 öncesi yıllardan kalma, kağıt üzerinde çizilerek oynanan bir zeka ve strateji oyununun kodlamaya dökülmüş halidir.<br>
+            Bu oyunda amaç, oyun sahasındaki 100 kareden istediğiniz birine tıklayarak 1 rakamını yerleştirmek. Bundan sonraki her bir kareye tıklamanızda, yerleştirilen sayılar birer birer sırayla artacak. Hedefimiz 100'e ulaşabilmek!<hr>
+            <ul>
+              <b> KURALLAR:</b>
+              <li>Oyunda istediğiniz bir kareden başlayabilirsiniz.</li>
+              <li>Bir sonraki sayıyı, yatay ve dikey düzlemde komşu 3.kareye, çapraz düzlemde ise komşu 2.kareye yerleştirebilirsiniz (Oyun motoru gidilebilecek kareleri gösteriyor).</li>
+              <li>Hamle geri alabilirsiniz, ancak sadece 3 kere! Hakkınız bittiğinde artık hamle geri alma şansınız kalmaz.</li>
+              <li>Baştan başlamak isterseniz kırmızı butonla oyunu baştan başlatabilirsiniz.</li>
+              <li>Oyun basit gibi görünse de, 100'e ulaşmak epey zor! :)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Geri Sayım Kartı -->
     <div id="overlay" class="overlay-card">
       <div class="card">
