@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
     <title>Hedef 100 Oyunu</title>
     <style type="text/css">
       html, body {
@@ -183,10 +184,12 @@
     <div id="gameEndOverlay" class="overlay-card">
       <div class="card">
         <div class="card-body">
-          <h3>Oyun Bitti!</h3>
+          <h3>Hedef 100 oyunu bitti!</h3>
           <p>Toplam Puan: <span id="finalScore"></span></p>
           <p>Geçen Süre: <span id="finalTime"></span></p>
           <p>Toplam Hamle: <span id="finalMoves"></span></p>
+          <button id="playAgain" class="btn btn-success">Tekrar Oyna</button>
+          <button id="shareGame" class="btn btn-primary">Paylaş</button>
         </div>
       </div>
     </div>
@@ -264,6 +267,34 @@
         document.getElementById("finalTime").innerText = finalTime;
         document.getElementById("finalMoves").innerText = finalMoves;
         document.getElementById("gameEndOverlay").style.display = 'flex';
+
+        // Tekrar Oyna Butonu
+        document.getElementById("playAgain").addEventListener("click", function() {
+          document.getElementById("gameEndOverlay").style.display = 'none';
+          resetGame();
+        });
+
+        // Paylaş Butonu (jpeg olarak indirme)
+        document.getElementById("shareGame").addEventListener("click", function() {
+          html2canvas(document.getElementById("gameEndOverlay"), {
+            onrendered: function(canvas) {
+              let link = document.createElement('a');
+              link.href = canvas.toDataURL('image/jpeg');
+              link.download = 'hedef_100_oyunu_sonuc.jpg';
+              link.click();
+            }
+          });
+        });
+      }
+
+      function resetGame() {
+        moveCount = 0;
+        seconds = 0;
+        localStorage.setItem("score", 0);
+        timerElement.innerHTML = "00:00";
+        moveCounterElement.innerHTML = "Hamle: 0";
+        // Oyun alanı yeniden başlatılır
+        location.reload();
       }
 
       // Oyun İçeriği ve Fonksiyonlar
@@ -368,41 +399,6 @@
 
       function reset() {
         location.reload();
-      }
-
-      function undo() {
-        let array = JSON.parse(localStorage.getItem('squareHistory'));
-        if (array.length === 0) {
-          alert('Sakin ol dostum, geri alacak bir şey yok, kötü bir şey yapmadın.');
-          return;
-        }
-        let lastElement = array.pop();
-        localStorage.setItem('squareHistory', JSON.stringify(array));
-        let prevCellCoords = array[array.length - 1];
-        if (prevCellCoords) {
-          document.getElementById('x' + prevCellCoords[0] + 'y' + prevCellCoords[1]).classList.add('lastClicked');
-        }
-        localStorage.setItem("score", parseInt(localStorage.getItem("score")) - 1);
-        document.getElementById('scoreSpan').innerText = localStorage.getItem("score");
-        let lastItem = document.getElementById('x' + lastElement[0] + 'y' + lastElement[1]);
-        lastItem.innerHTML = null;
-        lastItem.style.backgroundColor = '';
-        lastItem.classList.remove('clicked', 'lastClicked');
-        lastItem.classList.add('clickable');
-        localStorage.setItem("historyNumber", parseInt(localStorage.getItem("historyNumber")) - 1);
-        if (localStorage.getItem("historyNumber") <= 0) {
-          let buttonUndo = document.getElementById("buttonUndo");
-          buttonUndo.disabled = true;
-          buttonUndo.innerText = "HAK BİTTİ"; 
-          buttonUndo.classList.add("disabled-black");
-        }
-        closeAllSquares();
-        if (array.length > 0) {
-          lastElement = array.pop();
-          openSquares(lastElement[0], lastElement[1]);
-        } else {
-          reset();
-        }
       }
 
       document.getElementById('main').innerHTML += '<div id="buttons" class="buttons"><button class="buttonUndo" id="buttonUndo" onclick="undo()">GERİ AL</button><button class="buttonReset" onclick="reset()">BAŞTAN BAŞLA</button></div>';
