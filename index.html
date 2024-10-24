@@ -146,30 +146,6 @@
   </head>
 
   <body>
-    <!-- Geri Sayım Kartı -->
-    <div id="overlay" class="overlay-card">
-      <div class="card">
-        <div class="card-body">
-          <h3>Hazır mısın?</h3>
-          <p id="countdown">3</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Oyun Sonu Kartı -->
-    <div id="gameEndOverlay" class="overlay-card">
-      <div class="card">
-        <div class="card-body">
-          <h3>Hedef 100 oyunu bitti!</h3>
-          <p>Toplam Puan: <span id="finalScore"></span></p>
-          <p>Geçen Süre: <span id="finalTime"></span></p>
-          <p>Toplam Hamle: <span id="finalMoves"></span></p>
-          <button id="playAgain" class="btn btn-success">Tekrar Oyna</button>
-          <button id="shareGame" class="btn btn-primary">Paylaş</button>
-        </div>
-      </div>
-    </div>
-
     <!-- Oyun alanı -->
     <div class="jumbotron alert alert-primary text-center" style="font-weight:bold; font-size:24px; color:black">HEDEF 100 OYUNU</div>
     <div class="container">
@@ -194,22 +170,6 @@
     </div>
 
     <script type="text/javascript">
-      // Geri sayım ve oyun başlangıcı
-      let countdown = 3;
-      let overlay = document.getElementById('overlay');
-      let countdownElement = document.getElementById('countdown');
-      overlay.style.display = 'flex'; // Kartı görünür yap
-      let countdownInterval = setInterval(function() {
-        countdownElement.innerHTML = countdown;
-        if (countdown === 0) {
-          clearInterval(countdownInterval);
-          overlay.style.display = 'none'; // Kartı gizle
-          startGame();
-        }
-        countdown--;
-      }, 1000);
-
-      // Sayaçlar
       let moveCount = 0;
       let seconds = 0;
       let timerInterval;
@@ -233,43 +193,12 @@
         moveCounterElement.innerHTML = `Hamle: ${moveCount}`;
       }
 
-      // Oyun Bittiğinde Gösterilecek Bilgiler
-      function endGame() {
-        clearInterval(timerInterval);
-        let finalScore = localStorage.getItem("score");
-        let finalTime = timerElement.innerHTML;
-        let finalMoves = moveCount;
-        document.getElementById("finalScore").innerText = finalScore;
-        document.getElementById("finalTime").innerText = finalTime;
-        document.getElementById("finalMoves").innerText = finalMoves;
-        document.getElementById("gameEndOverlay").style.display = 'flex';
-
-        // Tekrar Oyna Butonu
-        document.getElementById("playAgain").addEventListener("click", function() {
-          document.getElementById("gameEndOverlay").style.display = 'none';
-          resetGame();
-        });
-
-        // Paylaş Butonu (jpeg olarak indirme)
-        document.getElementById("shareGame").addEventListener("click", function() {
-          html2canvas(document.getElementById("gameEndOverlay"), {
-            onrendered: function(canvas) {
-              let link = document.createElement('a');
-              link.href = canvas.toDataURL('image/jpeg');
-              link.download = 'hedef_100_oyunu_sonuc.jpg';
-              link.click();
-            }
-          });
-        });
-      }
-
       function resetGame() {
         moveCount = 0;
         seconds = 0;
         localStorage.setItem("score", 0);
         timerElement.innerHTML = "00:00";
         moveCounterElement.innerHTML = "Hamle: 0";
-        // Oyun alanı yeniden başlatılır
         location.reload();
       }
 
@@ -293,7 +222,7 @@
       }
 
       for (let i = 1; i <= localStorage.getItem("squareCount"); i++) {
-        for (let j = 1; j <= localStorage.getItem("squareCount"); j++) {  // Hata burada düzeltiliyor
+        for (let j = 1; j <= localStorage.getItem("squareCount"); j++) {
           document.getElementById(i + 'Row').innerHTML += '<div id="x' + j + 'y' + i + '" class="clickable squareDiv" data-x="'+j+'" data-y="'+i+'" onclick="clickSquare('+j+','+i+')"></div>';
         }
       }
@@ -368,7 +297,7 @@
           let clickable = openSquares(x, y);
           updateMoveCounter();
           if (clickable == 0) {
-            endGame();
+            alert('Oyun Bitti! Skor: ' + localStorage.getItem("score"));
           }
         }
       }
@@ -380,30 +309,32 @@
           alert("Geri alınacak hamle yok!");
           return;
         }
-        
+
         // Son hamleyi geri al
         let lastMove = historyArray.pop();
         localStorage.setItem('squareHistory', JSON.stringify(historyArray));
-        
+
         // Hamlenin bulunduğu hücreyi temizle
         let lastItem = document.getElementById('x' + lastMove[0] + 'y' + lastMove[1]);
         lastItem.innerHTML = '';
-        lastItem.classList.remove('clicked');
-        lastItem.classList.add('clickable');
-        
+        lastItem.classList.remove('clicked', 'lastClicked');
+        lastItem.classList.add('clickable'); // Geri alınan hücreyi tekrar seçilebilir yap
+
         // Skoru ve hamle sayısını geri al
         let currentScore = parseInt(localStorage.getItem("score")) - 1;
         localStorage.setItem("score", currentScore);
         document.getElementById('scoreSpan').innerText = currentScore;
-        
+
+        // Çevredeki kareleri yeniden aktif et
+        if (historyArray.length > 0) {
+          let lastActiveMove = historyArray[historyArray.length - 1]; // Son geçerli hareket
+          openSquares(lastActiveMove[0], lastActiveMove[1]);
+        }
+
         updateMoveCounter();
       }
 
-      function reset() {
-        location.reload();
-      }
-
-      document.getElementById('main').innerHTML += '<div id="buttons" class="buttons"><button class="buttonUndo" id="buttonUndo" onclick="undo()">GERİ AL</button><button class="buttonReset" onclick="reset()">BAŞTAN BAŞLA</button></div>';
+      document.getElementById('main').innerHTML += '<div id="buttons" class="buttons"><button class="buttonUndo" id="buttonUndo" onclick="undo()">GERİ AL</button><button class="buttonReset" onclick="resetGame()">BAŞTAN BAŞLA</button></div>';
     </script>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
